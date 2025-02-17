@@ -1,22 +1,7 @@
 # Master Code to Run All Scripts for Labour Project
 
-# Set the environment and directory
-using Pkg
-Pkg.activate(".")  # Activate the current directory
-
-# Add required packages (only if not already installed)
-Pkg.add("Plots")
-Pkg.add("NLsolve")
-Pkg.add("LaTeXStrings")
-
-# Import necessary modules
-using Plots
-using NLsolve
-using LaTeXStrings
-gr(dpi=450)
-
 # Set the base directory for the project 
-base_dir = "C:\\Users\\Li Tanfei\\OneDrive\\Desktop\\Code_for_Labour_Paper"
+base_dir = "C:\\Users\\121685\\Desktop\\Code_for_Labour_Paper\\Code_for_Labour_Paper"
 
 # Set directories for codes and output
 script_dir = joinpath(base_dir, "Codes")
@@ -27,6 +12,23 @@ isdir(output_dir) || mkdir(output_dir)
 
 # Change working directory to the script folder
 cd(script_dir)
+
+# Set the environment 
+using Pkg
+Pkg.activate(".")  # Activate the current directory
+
+# Add required packages (only if not already installed)
+
+Pkg.add("NLsolve")
+Pkg.add("Plots")
+Pkg.add("LaTeXStrings")
+
+# Import necessary modules
+using Plots
+using NLsolve
+using LaTeXStrings
+gr(dpi=450)
+
 
 # Execute the scripts in sequence
 include("B2_(a).jl")  # Script for B2 (a)

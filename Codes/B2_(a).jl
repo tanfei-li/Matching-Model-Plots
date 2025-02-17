@@ -53,20 +53,20 @@ function curve1(π, r)
 end
 
 function y_0_p(π, v, σ, θ, κ, c) 
-    return ((v - π)^2 / (2 * σ * v) - κ * θ )^2 / (2 * c)   # +1 for better visual effect
+    return ((v - π)^2 / (2 * σ * v) - κ * θ )^2 / (2 * c)   
 end
 
 function y_0_f(π, v, σ, θ, κ, c, η₀)
     term1 = ((v - π)^2 / (2 * σ * v) - κ * θ )^2 / (2 * c)
     term2 = η₀ * ((v - π)^2 / (2 * σ * v) - κ * θ)
     term3 = η₀ * (1 - θ) * κ
-    return term1 + term2 - term3  # +1 for better visual effect
+    return term1 + term2 - term3  
 end
 
 function y_1_f(π, v, σ, θ, κ, c, η₁)
     term1 = ((v - π)^2 / (2 * σ * v) - κ * θ)^2 / (2 * c)
     term2 = η₁ * ((v - π)^2 / (2 * σ * v) - κ * θ)
-    return term1 + term2  # +1 for better visual effect
+    return term1 + term2  
 end
 
 # Calculate values for each curve
@@ -93,22 +93,21 @@ plot!(π_values, y_0_f_values, label="y₀ᶠ(π)", lw=1.5, color=:black)
 plot!(π_values, y_1_f_values, label="y₁^f(π)", lw=1.5, color=:black)
 
 #####selecting the scale of the axis: also used in positioning of labels#########
-xlims!(x_min,x_max+0.3)
-y_min=y_0_f(x_max, v, σ, θ, κ, c, η₀)
+xlims!(x_min,x_max+0.1)
+y_min=0
 y_max=y_1_f(x_min, v, σ, θ, κ, c, η₁)+0.2
 ylims!(y_min,y_max)
 
 ######annotations##########
 
-hline!([0], lw=1, linestyle=:dash, color=:gray, label="") 
 annotate!(x_min-0.1,0, text(L"$0$", 7))
 annotate!(x_min - 0.1, y_max, text(L"y", 7))
-annotate!(x_max+0.3, y_min-0.17, text(L"\pi", 7))
+annotate!(x_max+0.15, y_min, text(L"\pi", 7))
 
 # Define the target function y₀ᵖ(π) to solve for π where y₀ᵖ(π) = 0
 π_root = v - sqrt(2 * v * σ * θ * κ)
 y_π_root = y_0_p(π_root, v, σ, θ, κ, c)
-plot!([π_root, π_root], [y_min, y_π_root], label="", color=:grey, linestyle=:dash, lw=1)
+plot!([π_root, π_root], [y_min, y_π_root], label="", color=:grey, linestyle=:dot, lw=1)
 annotate!(π_root, y_min-0.15, text(L"v - \sqrt{2\theta \sigma \kappa v}", 7))
 
 ######intersections##########
@@ -118,11 +117,11 @@ annotate!(π_root, y_min-0.15, text(L"v - \sqrt{2\theta \sigma \kappa v}", 7))
 y_π_0_p = y_0_p_values[π_0_p_index]  # Corresponding y value
 
 # Vertical dotted line for the intersection point
-plot!([π_0_p, π_0_p], [y_min, y_π_0_p],  # Adjust lower limit if needed (was -1.8)
+plot!([π_0_p, π_0_p], [y_min, y_π_0_p],  
     label="", 
     color=:grey, 
     lw=1, 
-    linestyle=:dash)
+    linestyle=:dot)
 annotate!(π_0_p, y_min-0.17, text(L"\pi_0^p", 7))  # Adjust y-position to make annotation visible
 
 # Find the interception point between y₀ᶠ(π) and r*pi
@@ -135,7 +134,7 @@ plot!([π_0_f, π_0_f], [y_min, y_π_0_f],
     label="", 
     color=:grey, 
     lw=1, 
-    linestyle=:dash)
+    linestyle=:dot)
 annotate!(π_0_f, y_min-0.17, text(L"\pi_0^f", 7)) 
 
 # Find the interception point between y₁^f(π) and r*pi
@@ -148,7 +147,7 @@ plot!([π_1_f, π_1_f], [y_min, y_π_1_f],
     label="", 
     color=:grey, 
     lw=1, 
-    linestyle=:dash)
+    linestyle=:dot)
 annotate!(π_1_f, y_min-0.17, text(L"\pi_1^f", 7))
 
 
@@ -161,14 +160,14 @@ plot!([π_interception, π_interception], [y_min, y_interception],
     label="", 
     color=:grey, 
     lw=1, 
-    linestyle=:dash)
+    linestyle=:dot)
 
 # Horizontal line from (π_min, y_interception) to (π_interception, y_interception)
 plot!([x_min, π_interception], [y_interception, y_interception], 
     label="", 
     color=:grey, 
     lw=1, 
-    linestyle=:dash)
+    linestyle=:dot)
 #Annotation
 annotate!(x_min-0.2, y_interception, text(L"\frac{(1-\theta)^2 \kappa^2}{2c}", 7))
 annotate!(π_interception, y_min-0.17, text(L"v - \sqrt{2\sigma \kappa v}", 7))
@@ -180,26 +179,29 @@ annotate!(x_curve_name,y_0_f_name, text(L"y_0^f(\pi)", 7))
 x_curve_name = π_0_f - 0.2
 y_0_p_name = y_0_p(x_curve_name, v, σ, θ, κ, c)+0.24
 annotate!(x_curve_name,y_0_p_name, text(L"y_0^p(\pi)", 7))
-y_1_f_name = y_1_f(x_curve_name, v, σ, θ, κ, c, η₁)+0.3
-annotate!(x_curve_name+0.05,y_1_f_name, text(L"y_1^f(\pi)", 7))
+y_1_f_name = y_1_f(π_0_f, v, σ, θ, κ, c, η₁)+0.3
+annotate!(π_0_f,y_1_f_name, text(L"y_1^f(\pi)", 7))
 y_rpi=r*π_root-r*x_min+0.1
 annotate!(π_root,y_rpi,text(L"r\pi",7, color=:red))
 
-########F Labels#######
-x_f_low = 0.5*(π_0_f+π_0_p)
-annotate!(x_f_low,y_min-0.5, text(L"$F_{low}$", 7))
-x_f_med = 0.5*(π_0_p+π_1_f)
-annotate!(x_f_med,y_min-0.5, text(L"$F_{medium}$", 7))
-x_f_high = 0.5*(π_1_f+π_root)
-annotate!(x_f_high,y_min-0.5, text(L"$F_{high}$", 7))
+########F Labels#######removed after comment####
+#x_f_low = 0.5*(π_0_f+π_0_p)
+#annotate!(x_f_low,y_min-0.5, text(L"$F_{low}$", 7))
+#x_f_med = 0.5*(π_0_p+π_1_f)
+#annotate!(x_f_med,y_min-0.5, text(L"$F_{medium}$", 7))
+#x_f_high = 0.5*(π_1_f+π_root)
+#annotate!(x_f_high,y_min-0.5, text(L"$F_{high}$", 7))
 
 #####plot name label##
 y_plot_name = y_1_f(π_min, v, σ, θ, κ, c, η₁)
 annotate!(π_1_f,y_plot_name, text(L"$v<v_s$", 8))
 
-savefig(joinpath(output_dir, "B2_(a)_high_v.png"))
-savefig(joinpath(output_dir, "B2_(a)_high_v.pdf"))
 display(plot!)
+
+savefig(joinpath(output_dir, "B2_(a)_low_v.png"))
+savefig(joinpath(output_dir, "B2_(a)_low_v.pdf"))
+
+
 
 
 

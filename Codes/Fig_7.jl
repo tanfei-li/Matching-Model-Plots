@@ -36,6 +36,7 @@ function π_1_f_eq(π, v, σ, θ, κ, c, η₁)
     term2 = η₁ / r * ((v - π)^2 / (2 * σ * v - κ * θ))
     return term1 + term2 - π
 end
+
 # Solve for π_0^p(v) for v in v_values_0_p
 π_0_p_values = Float64[]
 for v in v_values_0_p
@@ -110,15 +111,15 @@ sol_π_0_f_v_F_h = nlsolve(x -> π_0_f_eq(x[1], v_F_h, σ, θ, κ, c,η₀), [0.
 hline!([π_F_h], lw=1, linestyle=:dot, linecolor=:blue, label="") #F high 
 
 #vertical line at v_s
-plot!([v_s, v_s], [π_0_p_v_s, y_min], linestyle=:dashdotdot, linecolor=:grey, label="")
+plot!([v_s, v_s], [π_0_p_v_s, y_min], linestyle=:dot, linecolor=:grey, label="")
 
 # Labelling the curves
-v_label = v_s - 0.4
+v_label = x_min + 0.3
 sol_π_0_p_label = nlsolve(x -> π_0_p_eq(x[1], v_label, σ, θ, κ, c), [0.5 * v_label])
 π_0_p_label_value = sol_π_0_p_label.zero[1]
-annotate!(v_label, π_0_p_label_value + 0.35, text(L"\pi_0^p(v)", 8, :left))
-annotate!(maximum(v_values_all)-0.4, π_0_f_values[end], text(L"\pi_0^f(v)", 8, :left))
-annotate!(maximum(v_values_all)-0.4, π_1_f_values[end], text(L"\pi_1^f(v)", 8, :left))
+annotate!(v_label, π_0_p_label_value + 0.35, text(L"\pi_0^p(v)", 7, :left))
+annotate!(maximum(v_values_all)-0.4, π_0_f_values[end], text(L"\pi_0^f(v)", 7, :left))
+annotate!(maximum(v_values_all)-0.4, π_1_f_values[end], text(L"\pi_1^f(v)", 7, :left))
 
 # Annotations
 #v_s and v_sat
@@ -144,8 +145,9 @@ end
 v_A_value = find_v_for_pi_1_f(π_F, σ, θ, κ, c, η₁, x_min, x_max)
 
 # Find the midpoint between v_value and x_min
-v_A = (v_A_value + x_min) / 2
-annotate!(v_A, π_F - 0.12, text(L"A", 8, color=:blue))
+v_A = (v_A_value + x_min) / 2 - 0.1
+annotate!(v_A, π_F - 0.15, text(L"A", 7, color=:black))
+annotate!(v_A+0.15, π_F + 0.2, text(L"Non\ open", 6, color=:black))
 
 # B #
 function find_v_for_pi_0_p(π_F, σ, θ, κ, c, x_min, x_max)
@@ -153,17 +155,25 @@ function find_v_for_pi_0_p(π_F, σ, θ, κ, c, x_min, x_max)
     return sol.zero[1]
 end
 # Call the function to find v_value
+
 v_B_value = find_v_for_pi_0_p(π_F, σ, θ, κ, c, x_min, x_max)
-v_B = (v_B_value + x_min) / 2
-annotate!(v_B, π_F - 0.12, text(L"B", 8, color=:blue))
+v_B = (v_B_value + x_min) / 2 + 0.2
+annotate!(v_B, π_F - 0.15, text(L"B", 7, color=:black))
+annotate!(v_B+0.3, π_F + 0.4, text(L"New\ all", 6, color=:black))
+annotate!(v_B+0.3, π_F + 0.2, text(L"with\ preselection", 6, color=:black))
 
 # C #
 v_C = (v_B_value + v_s) / 2
-annotate!(v_C, π_F - 0.12, text(L"C", 8, color=:blue))
+annotate!(v_C, π_F - 0.15, text(L"C", 7, color=:black))
+annotate!(v_C, π_F + 0.4, text(L"Partial\ to\ Full", 6, color=:black))
+annotate!(v_C, π_F + 0.2, text(L"with\ preselection", 6, color=:black))
+
 
 # D #
 v_D = (v_s + x_max) / 2
-annotate!(v_D, π_F - 0.12, text(L"D", 8, color=:blue))
+annotate!(v_D, π_F - 0.15, text(L"D", 7, color=:black))
+annotate!(v_D, π_F + 0.4 , text(L"Full\ without\ preselection", 6, color=:black))
+annotate!(v_D, π_F + 0.2 , text(L"to\ Full\ with\ preselection", 6, color=:black))
 
 ###align F high###
 #A\,'#
@@ -175,24 +185,23 @@ end
 v_A_value = find_v_for_pi_1_f(π_F_h, σ, θ, κ, c, η₁, x_min, x_max)
 # Find the midpoint between v_value and x_min
 v_A = (v_A_value + x_min) / 2
-annotate!(v_A, π_F_h - 0.12, text(L"A\,'", 8, color=:blue))
+annotate!(v_A, π_F_h - 0.15, text(L"A\,'", 7, color=:black))
 
 #B\,'#
 function find_v_for_pi_0_f(π_F_h, σ, θ, κ, c, η₀, x_min, x_max)
     sol = nlsolve(v -> π_0_f_eq(π_F_h, v[1], σ, θ, κ, c, η₀), [0.5 * (x_min + x_max)])
     return sol.zero[1]
 end
+
 # Call the function to find v_value
 v_B_value = find_v_for_pi_0_f(π_F_h, σ, θ, κ, c, η₀, x_min, x_max)
 v_B = (v_B_value + v_A_value) / 2
-annotate!(v_B, π_F_h - 0.12, text(L"B\,'", 8, color=:blue))
+annotate!(v_B, π_F_h - 0.15, text(L"B\,'", 7, color=:black))
 
 #C\,'#
 v_C = (v_B_value + x_max) / 2
-annotate!(v_C, π_F_h - 0.12, text(L"C\,'", 8, color=:blue))
+annotate!(v_C, π_F_h - 0.15, text(L"C\,'", 7, color=:black))
 
-# Save and display plot
 savefig(joinpath(output_dir, "Fig_7.pdf"))
 savefig(joinpath(output_dir, "Fig_7.png"))
 display(plot!)
-

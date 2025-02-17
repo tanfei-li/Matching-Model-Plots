@@ -131,9 +131,9 @@ offset_value = 0.4
 π_0_f_values_offset = [π - offset_value for π in π_0_f_values_lowq]
 π_1_f_values_offset = [π - offset_value for π in π_1_f_values_lowq]
 
-plot!(v_values_0_p_lowq, π_0_p_values_offset, lw=1.5, linecolor=custom_grey, linestyle=:dash, label=L"")
-plot!(v_values_0_f_lowq, π_0_f_values_offset, lw=1.5, linecolor=:black, linestyle=:dash, label=L"")
-plot!(v_values_all_lowq, π_1_f_values_offset, lw=1.5, linecolor=:black, linestyle=:dash, label=L"")
+plot!(v_values_0_p_lowq, π_0_p_values_offset, lw=1.5, linecolor=custom_grey, linestyle=:dashdot, label=L"")
+plot!(v_values_0_f_lowq, π_0_f_values_offset, lw=1.5, linecolor=:black, linestyle=:dashdot, label=L"")
+plot!(v_values_all_lowq, π_1_f_values_offset, lw=1.5, linecolor=:black, linestyle=:dashdot, label=L"")
 
 xlims!(v_sat + 0.1, v_max)
 
@@ -160,58 +160,63 @@ hline!([π_F], lw=1, linestyle=:solid, linecolor=:blue, label="") #F low
 
 
 #vertical line at v_s and v_s_lowq
-plot!([v_s, v_s], [π_0_p_v_s, y_min], linestyle=:dashdotdot, linecolor=:grey, label="")
-plot!([v_s_lowq, v_s_lowq], [π_0_p_v_s_lowq-offset_value, y_min], linestyle=:dot, linecolor=:grey, label="")
+plot!([v_s, v_s], [π_0_p_v_s, y_min], lw=1, linestyle=:solid, linecolor=:black, label="")
+plot!([v_s_lowq, v_s_lowq], [π_0_p_v_s_lowq-offset_value, y_min], lw=1, linestyle=:dashdot, linecolor=:grey,label="")
+annotate!(v_s, (π_0_p_v_s + y_min)/2, text(L"q_{high}", 7, color=:black))
+annotate!(v_s_lowq, (π_0_p_v_s_lowq-offset_value + y_min)/2, text(L"q_{low}", 7, color=:black))
+
 
 # Labelling the curves
-v_label = (v_s_lowq + x_min)/2
+
+v_label = (v_s_lowq + x_min)/2 - 0.4
 sol_π_0_p_label = nlsolve(x -> π_0_p_eq(x[1], v_label, σ, θ, κ, c), [0.5 * v_label])
 π_0_p_label_value = sol_π_0_p_label.zero[1]
-annotate!(v_label, π_0_p_label_value - 0.13, text(L"\pi_0^p(v)", 8, :left, color=:black))
-annotate!(maximum(v_values_all)-0.4, π_0_f_values[end] - 0.47 , text(L"\pi_0^f(v)", 8, :left))
-annotate!(maximum(v_values_all)-0.4, π_1_f_values[end] - 0.45 , text(L"\pi_1^f(v)", 8, :left))
+darker_grey = RGB(0.35, 0.35, 0.35)
+annotate!(v_label, π_0_p_label_value - 0.13, text(L"\pi_0^p(v)", 7, :left, color=darker_grey))
+annotate!(maximum(v_values_all)-0.4, π_0_f_values[end] - 0.47 , text(L"\pi_0^f(v)", 7, :left))
+annotate!(maximum(v_values_all)-0.4, π_1_f_values[end] - 0.45 , text(L"\pi_1^f(v)", 7, :left))
 
 
 ##q_high and q_low labels 
 #on pi_0_p
-v_label = (v_s+x_min)/2 - 1
+v_label = v_s_lowq - 0.1
 sol_π_0_p_label = nlsolve(x -> π_0_p_eq(x[1], v_label, σ, θ, κ, c), [0.5 * v_label])
 q_high_0_p = sol_π_0_p_label.zero[1]
-annotate!(v_label, q_high_0_p + 0.22, text(L"q_{high}", 8, :left))
+annotate!(v_label, q_high_0_p + 0.22, text(L"q_{high}", 7, :left))
 
-v_label = (v_s+x_min)/2
+v_label = v_s_lowq - 0.2
 sol_π_0_p_label = nlsolve(x -> π_0_p_eq(x[1], v_label, σ, θ, κ, c_lowq), [0.5 * v_label])
 q_low_0_p_lowq = sol_π_0_p_label.zero[1]
-annotate!(v_label, q_low_0_p_lowq - offset_value - 0.2, text(L"q_{low}", 8, :left))
+annotate!(v_label, q_low_0_p_lowq - offset_value + 0.1, text(L"q_{low}", 7, :left))
 
 #on pi_0_f
 v_label = (v_s+x_max)/2
 sol_π_0_f_label = nlsolve(x -> π_0_f_eq(x[1], v_label, σ, θ, κ, c,η₀), [0.5 * v_label])
 q_high_0_f = sol_π_0_f_label.zero[1]
-annotate!(v_label, q_high_0_f + 0.22, text(L"q_{high}", 8, :left))
+annotate!(v_label, q_high_0_f + 0.22, text(L"q_{high}", 7, :left))
 
 sol_π_0_f_label = nlsolve(x -> π_0_f_eq(x[1], v_label, σ, θ, κ, c_lowq,η₀), [0.5 * v_label])
 q_low_0_f = sol_π_0_f_label.zero[1]
-annotate!(v_label, q_low_0_f - offset_value - 0.2, text(L"q_{low}", 8, :left))
+annotate!(v_label, q_low_0_f - offset_value + 0.1, text(L"q_{low}", 7, :left))
 
-#on pi_0_f
+#on pi_1_f
 
 v_label = (x_min+x_max)/2
 sol_π_1_f_label = nlsolve(x -> π_1_f_eq(x[1], v_label, σ, θ, κ, c,η₁), [0.5 * v_label])
 q_high_1_f = sol_π_1_f_label.zero[1]
-annotate!(v_label, q_high_1_f + 0.22, text(L"q_{high}", 8, :left))
+annotate!(v_label, q_high_1_f + 0.22, text(L"q_{high}", 7, :left))
 
 sol_π_1_f_label = nlsolve(x -> π_1_f_eq(x[1], v_label, σ, θ, κ, c_lowq,η₁), [0.5 * v_label])
 q_low_1_f = sol_π_1_f_label.zero[1]
-annotate!(v_label - 0.3, q_low_1_f - offset_value - 0.2, text(L"q_{low}", 8, :left))
+annotate!(v_label - 0.2, q_low_1_f - offset_value - 0.1, text(L"q_{low}", 7, :left))
 
 
 
 # point Annotations
 #v_s and v_sat
 annotate!(x_min, y_min - 0.2, text(L"v_{sat}", 8))
-annotate!(v_s, y_min - 0.2, text(L"v_s \, q_{high}", 8, :left))
-annotate!(v_s_lowq-0.05, y_min - 0.2, text(L"v_s \, q_{low}", 8, :left))
+annotate!(v_s, y_min - 0.2, text(L"v_s", 8, :left))
+
 
 ##labels to F
 annotate!(x_min - 0.15, π_F, text(L"F", 8, :left)) #F
@@ -234,7 +239,7 @@ v_a_value = find_v_for_pi_1_f(π_F, σ, θ, κ, c, η₁, x_min, x_max)
 
 # Find the midpoint between v_value and x_min
 v_a = (v_a_value + x_min) / 2
-annotate!(v_a, π_F + 0.12, text(L"a", 8, color=:blue))
+annotate!(v_a, π_F + 0.12, text(L"a", 7, color=:blue))
 
 # b #
 π_F_offset = π_F + offset_value
@@ -246,7 +251,7 @@ end
 # Call the function to find v_value
 v_b_value = find_v_for_pi_1_f(π_F_offset, σ, θ, κ, c_lowq, η₁, x_min, x_max)
 v_b = (v_b_value + v_a_value) / 2
-annotate!(v_b, π_F - 0.12, text(L"b", 8, color=:blue))
+annotate!(v_b, π_F - 0.12, text(L"b", 7, color=:blue))
 
 # c #
 function find_v_for_pi_0_p(π_F, σ, θ, κ, c, x_min, x_max)
@@ -256,7 +261,7 @@ end
 # Call the function to find v_value
 v_c_value = find_v_for_pi_0_p(π_F, σ, θ, κ, c, x_min, x_max)
 v_c = (v_c_value + v_b_value) / 2
-annotate!(v_c, π_F - 0.12, text(L"c", 8, color=:blue))
+annotate!(v_c, π_F - 0.12, text(L"c", 7, color=:blue))
 
 # d #
 function find_v_for_pi_0_p(π_F_offset, σ, θ, κ, c, x_min, x_max)
@@ -266,19 +271,19 @@ end
 # Call the function to find v_value
 v_d_value = find_v_for_pi_0_p(π_F_offset, σ, θ, κ, c_lowq, x_min, x_max)
 v_d = (v_d_value + v_c_value) / 2
-annotate!(v_d, π_F - 0.12, text(L"d", 8, color=:blue))
+annotate!(v_d, π_F - 0.12, text(L"d", 7, color=:blue))
 
 # e #
 v_e = (v_d_value + v_s_lowq) / 2
-annotate!(v_e, π_F - 0.12, text(L"e", 8, color=:blue))
+annotate!(v_e, π_F - 0.12, text(L"e", 7, color=:blue))
 
 # f #
 v_f = (v_s_lowq + v_s) / 2
-annotate!(v_f, π_F - 0.12, text(L"f", 8, color=:blue))
+annotate!(v_f, π_F - 0.12, text(L"f", 7, color=:blue))
 
 # g #
 v_g = (v_s + v_max) / 2
-annotate!(v_g, π_F - 0.12, text(L"g", 8, color=:blue))
+annotate!(v_g, π_F - 0.12, text(L"g", 7, color=:blue))
 
 savefig(joinpath(output_dir, "Fig_8.pdf"))
 savefig(joinpath(output_dir, "Fig_8.png"))
