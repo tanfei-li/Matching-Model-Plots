@@ -1,7 +1,7 @@
 # Master Code to Run All Scripts for Labour Project
 
 # Set the base directory for the project 
-base_dir = "C:\\Users\\121685\\Desktop\\Code_for_Labour_Paper\\Code_for_Labour_Paper"
+base_dir = "C:\\Users\\121685\\Desktop\\Code_for_Labour_Paper\\Code_for_Labour_Paper" #change accordingly
 
 # Set directories for codes and output
 script_dir = joinpath(base_dir, "Codes")
